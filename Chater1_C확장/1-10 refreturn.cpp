@@ -18,7 +18,7 @@ int main()
 }
 
 /*
-l-value : 변수
+l-value : 변수 
 R-value : 상수, 배열, 변수
 
 레퍼런스는 항상 l-value에 와야함. => 상수는 레퍼런스가되면 안된다.
