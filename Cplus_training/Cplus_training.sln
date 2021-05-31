@@ -5,7 +5,11 @@ VisualStudioVersion = 16.0.31229.75
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Cplus_training", "Cplus_training.vcxproj", "{AE6C2EC4-61F7-4A45-B171-7040C35F4FAD}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Chater1_C확장", "..\Chater1_C확장\Chater1_C확장.vcxproj", "{40896655-7D23-4C8A-8F20-A01C7B69AC31}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Chapter1_C확장", "..\Chater1_C확장\Chater1_C확장.vcxproj", "{40896655-7D23-4C8A-8F20-A01C7B69AC31}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Chapter2_클래스", "..\Chapter2_클래스\Chapter2_클래스.vcxproj", "{D24DE5BB-7D39-4228-9FF7-E3B760C0AC48}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Chapter3_생성자", "..\Chapter3_생성자\Chapter3_생성자.vcxproj", "{CE64B594-D3D1-4083-82DB-073CE49E68E9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -31,6 +35,22 @@ Global
 		{40896655-7D23-4C8A-8F20-A01C7B69AC31}.Release|x64.Build.0 = Release|x64
 		{40896655-7D23-4C8A-8F20-A01C7B69AC31}.Release|x86.ActiveCfg = Release|Win32
 		{40896655-7D23-4C8A-8F20-A01C7B69AC31}.Release|x86.Build.0 = Release|Win32
+		{D24DE5BB-7D39-4228-9FF7-E3B760C0AC48}.Debug|x64.ActiveCfg = Debug|x64
+		{D24DE5BB-7D39-4228-9FF7-E3B760C0AC48}.Debug|x64.Build.0 = Debug|x64
+		{D24DE5BB-7D39-4228-9FF7-E3B760C0AC48}.Debug|x86.ActiveCfg = Debug|Win32
+		{D24DE5BB-7D39-4228-9FF7-E3B760C0AC48}.Debug|x86.Build.0 = Debug|Win32
+		{D24DE5BB-7D39-4228-9FF7-E3B760C0AC48}.Release|x64.ActiveCfg = Release|x64
+		{D24DE5BB-7D39-4228-9FF7-E3B760C0AC48}.Release|x64.Build.0 = Release|x64
+		{D24DE5BB-7D39-4228-9FF7-E3B760C0AC48}.Release|x86.ActiveCfg = Release|Win32
+		{D24DE5BB-7D39-4228-9FF7-E3B760C0AC48}.Release|x86.Build.0 = Release|Win32
+		{CE64B594-D3D1-4083-82DB-073CE49E68E9}.Debug|x64.ActiveCfg = Debug|x64
+		{CE64B594-D3D1-4083-82DB-073CE49E68E9}.Debug|x64.Build.0 = Debug|x64
+		{CE64B594-D3D1-4083-82DB-073CE49E68E9}.Debug|x86.ActiveCfg = Debug|Win32
+		{CE64B594-D3D1-4083-82DB-073CE49E68E9}.Debug|x86.Build.0 = Debug|Win32
+		{CE64B594-D3D1-4083-82DB-073CE49E68E9}.Release|x64.ActiveCfg = Release|x64
+		{CE64B594-D3D1-4083-82DB-073CE49E68E9}.Release|x64.Build.0 = Release|x64
+		{CE64B594-D3D1-4083-82DB-073CE49E68E9}.Release|x86.ActiveCfg = Release|Win32
+		{CE64B594-D3D1-4083-82DB-073CE49E68E9}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
