@@ -6,8 +6,6 @@ using namespace std;
 
 class cTest
 {
-
-
 private:
     // 멤버변수
     int m_num;
@@ -37,11 +35,10 @@ public:
         this->ptr = new int;       // 동적할당(깊은 복사)
         this->ptr = other.ptr;
         cout << "복사 생성자 호출 : " << m_num << ", " << ptr << endl;
-
     }
 
 
-    cTest(int num, int* ptr)   
+    cTest(int num, int* ptr)   // 인자 2개받는 생성자 선언
     {
         this->m_num = num;     // 이 객체(클래스)의 m_num에 num을 대입
         this->ptr = new int;   // 메모리 동적할당
