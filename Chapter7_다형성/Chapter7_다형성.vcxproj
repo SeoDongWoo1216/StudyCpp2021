@@ -139,7 +139,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="7-4 Overridable.cpp" />
+    <ClInclude Include="..\Chapter4_캡슐화\cursor.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="7-8 PureVirtual.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
