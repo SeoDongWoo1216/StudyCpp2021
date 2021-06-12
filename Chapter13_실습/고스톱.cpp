@@ -862,7 +862,8 @@ void Initialize()
         North.Reset();
         Blanket.Reset();
         Deck.Shuffle();
-        for (i = 0; i < 10; i++) {
+        for (i = 0; i < 10; i++) 
+        {
             South.InsertCard(Deck.Pop());
             North.InsertCard(Deck.Pop());
             if (i < 8) Blanket.InsertCard(Deck.Pop());
@@ -910,13 +911,15 @@ int InputInt(const char* Mes, int start, int end)
     OutPrompt(Mes);
     for (;;) {
         ch = tolower(_getch());
-        if (ch == 0xE0 || ch == 0) {
+        if (ch == 0xE0 || ch == 0)
+        {
             ch = _getch();
             continue;
         }
         if (!(isdigit(ch) || ch == 'a')) continue;
         if (ch == 'a') ch = 10; else ch = ch - '0';
-        if (ch >= start && ch <= end) {
+        if (ch >= start && ch <= end) 
+        {
             return ch;
         }
         OutPrompt("무효한 번호입니다. 지정한 범위에 맞게 다시 입력해 주세요.");
