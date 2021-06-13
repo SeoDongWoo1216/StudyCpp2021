@@ -985,7 +985,7 @@ int InputInt(const char* Mes, int start, int end)
     for (;;) 
     {
         ch = tolower(_getch());
-        if (ch == 0xE0 || ch == 0) 
+        if (ch == 0xE0 || ch == 0)
         {
             ch = _getch();
             continue;
