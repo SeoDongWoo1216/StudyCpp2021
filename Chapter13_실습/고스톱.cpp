@@ -1,10 +1,10 @@
 /*
-    Cpp 실습 : 고스톱
+    Cpp 실습 : 13장 고스톱 구현
 
     구현
     0. 2인용으로 구현
     1. 같은 카드 세장이 들어왔을때 흔들어 점수를 두배로 만드는 규칙은 사용자의 선택이 필요하고
-       한번에 하나의 카드를 내는 규칙에 예외가 생겨 제외
+      한번에 하나의 카드를 내는 규칙에 예외가 생겨 제외
     2. 두장의 피로 계산되는 쌍피, 피와 십짜리 양쪽으로 쓸 수 있는 카드, 보너스 카드는 제외
     3. 피박, 광박 등 점수를 곱절로 만드는 규칙도 제외
     4. 플레이어는 남군, 북군, 몇개의 카드는 펼쳐져있고 뒤집어진 카드는 ???로 표시
@@ -13,32 +13,41 @@
     7. 클래스에는 //// 로 주석 추가, 나머지는 //로 주석 추가
 */
 
+/*
+    더 구현할 것
+    1. 첫번째로 쌌을때 기본 점수를 부여하는 규칙 생성
+    2. 세번 싸면 기본 점수로 게임이 끝남.
+    3. 중간에 세 장의 카드를 내는 폭탄 기능
+    4. 9십 카드를 쌍피와 십짜리 카드 양쪽으로 활용하는 기능
+*/
+
 #define _CRT_SECURE_NO_WARNINGS
 #include <stdio.h>
 #include <conio.h>
-#include "cursor.h" // 화면 전체를 사용하고 천천히 진행하기위해 gotoxy, delay 함수
+#include "cursor.h" // 화면 전체를 사용하고 천천히 진행하기위해 gotoxy, delay 함수 사용(헤더파일)
 #include <string.h>
 #include <assert.h>
 #include <iostream>
 using namespace std;
 
-const int MaxCard = 48;    // 화투패 개수
-const int CardGap = 4;     // 카드 간의 간격(하나의 카드를 세 문자 길이로 출력하고 공백 하나를 더해서 4칸)
+const int MaxCard = 48;        // 화투패 개수
+const int CardGap = 4;         // 카드 간의 간격(하나의 카드를 세 문자 길이로 출력하고 공백 하나를 더해서 4칸)
 const int Speed = 1000;        // 카드를 내거나 메세지를 출력할때 대기할 시간 => 전체적인 게임속도 조절
-const int PromptSpeed = 2000;  // 변화가 생길때마다 게임판의 흐름과 메세지를 확인할 시간이 확보되야함.
+const int PromptSpeed = 2000;  // 변화가 생길때마다 게임판의 흐름과 메세지를 확인할 시간이 확보하기위해 쓸 변수.
+                               // 테스트할때는 Speed, PromptSpeed를 0으로 설정해줌.
 
-
-//// 화투 한장을 표현하는 클래스
+//// 화투 한장을 표현하는 클래스(영어로 화투라는 표현이 없으므로 Card 용어로 사용)
 struct SCard
 {
     char Name[4];
-    SCard() { Name[0] = 0; }
-    SCard(const char* pName)
+    SCard() { Name[0] = 0; }                                // 디폴트 생성자는 빈 이름으로 초기화해서 쓰레기값만 안들어가게해줌
+
+    SCard(const char* pName)                                // const char*로 받는 생성자는 인수로 문자열을 받아 이름을 초기화해줌
     {
         strcpy(this->Name, pName);
     }
 
-    int GetNumber() const  // 화투의 숫자
+    int GetNumber() const  // 화투의 숫자 조사
     {
         if (isdigit(Name[0])) return Name[0] - '0';
         if (Name[0] == 'J') return 10;                      // 10번 이상의 카드를 장, 비, 똥으로 불리는데 1바이트 표현을위해 J, B, D로 표현
@@ -46,26 +55,26 @@ struct SCard
         return 12;
     }
 
-    int GetKind() const   // 화투의 종류
+    int GetKind() const    // 화투의 종류 조사
     {
         if (strcmp(Name + 1, "광") == 0) return 0;          // 카드의 종류는 광, 십, 오, 피 4종류로 구분
         else if (strcmp(Name + 1, "십") == 0) return 1;
         else if (strcmp(Name + 1, "오") == 0) return 2;
-        else if (strcmp(Name + 1, "쌍") == 0) return 3;
+        else if (strcmp(Name + 1, "쌍") == 0) return 3;     // 쌍피 추가 
         else return 4;
     }
 
-    friend ostream& operator <<(ostream& c, const SCard& C) // << 연산자 정의, Name 멤버를 cout로 출력
+    friend ostream& operator <<(ostream& c, const SCard& C) // '<<' 연산자 정의, Name 멤버를 cout로 출력
     {
         return c << C.Name;
     }
 
-    bool operator ==(const SCard& Other) const              // == 연산자 정의, 두 카드가 같은지 조사. 이름이 일치하면 같은 카드임.
+    bool operator ==(const SCard& Other) const              // '==' 연산자 정의, 두 카드가 같은지 조사. 이름이 일치하면 같은 카드임.
     {
         return (strcmp(Name, Other.Name) == 0);
     }
 
-    bool operator <(const SCard& Other) const               // < 연산자 정의, 두 카드의 대소를 비교.(1차로 숫자, 숫자가 같으면 광, 십, 오, 피 순으로 순서를 매김)
+    bool operator <(const SCard& Other) const               // '<' 연산자 정의, 두 카드의 대소를 비교.(1차로 숫자, 숫자가 같으면 광, 십, 오, 피 순으로 순서를 매김)
     {
         if (GetNumber() < Other.GetNumber()) return true;
         if (GetNumber() > Other.GetNumber()) return false;
@@ -75,7 +84,7 @@ struct SCard
 };
 
 
-// 화투의 초기 카드 목록
+// 화투의 초기 카드 목록(규칙성이 딱히 없으므로 하나하나 노가다로 생성)
 SCard HwaToo[MaxCard] = {
     "1광","1오","1피","1피","2십","2오","2피","2피","3광","3오","3피","3피",
     "4십","4오","4피","4피","5십","5오","5피","5피","6십","6오","6피","6피",
@@ -85,7 +94,7 @@ SCard HwaToo[MaxCard] = {
 
 
 //// 카드의 집합을 관리하는 클래스
-//// 삽입, 삭제, 검색 등의 기본적인 기능 제공
+//// 삽입, 삭제, 검색 등의 기본적인 기능 제공(읽기함수만 있고 쓰기함수는 없으므로 이 클래스는 외부에서 읽기 전용 클래스임)
 //// 이 클래스는 게임에 등장하는 카드 집합의 공통 부모역할을함.
 class CCardSet
 {
@@ -93,24 +102,29 @@ protected:
     SCard Card[MaxCard];
     int Num;                 // 집합에 포함된 카드의 현재 개수(삽입, 삭제되면서 증감)
     const int sx, sy;        // 카드 집합의 화면상 좌표이면서 출력 위치를 변경할 일이 없기때문에 상수화
-    CCardSet(int asx, int asy) : sx(asx), sy(asy) { Num = 0; }
+
+    CCardSet(int asx, int asy) : sx(asx), sy(asy)   // 생성자는 인수로 전달받은 화면 좌표를 저장해두고 카드 개수를 0으로 초기화
+                                                    // 생성자가 protected화 되어있으므로 이 객체는 외부에서 직접 생성할 수 없으며 파생 클래스를 통해서만 초기화가능.
+    { 
+        Num = 0; 
+    }
 
 public:
-    int GetNum() 
+    int GetNum()             // 개수 조사
     { 
         return Num; 
     }    
-    SCard GetCard(int idx) 
+    SCard GetCard(int idx)   // 배열의 카드를 읽음
     { 
         return Card[idx]; 
     }
-    void Reset() 
+    void Reset()             // 게임을 여러번 할때 재초기화를위해 정의해두었음.
     {
         for (int i = 0; i < MaxCard; i++) Card[i].Name[0] = 0;
         Num = 0;
     }
 
-    void InsertCard(SCard C);              // 카드삽입함수
+    void InsertCard(SCard C);              // 카드 삽입 함수
     SCard RemoveCard(int idx);             // 지정한 첨자의 카드를 제거하고 해당 카드를 리턴(손에서 카드 내거나 데크에서 카드를 뒤집을때 호출)
     int FindSameCard(SCard C, int* pSame); // C와 일치하는 카드를 조사하는 함수
     int FindFirstCard(const char* pName);
@@ -122,27 +136,46 @@ void CCardSet::InsertCard(SCard C)
 {
     int i;
 
-    if (C.Name[0] == 0) return;
-    for (i = 0; i < Num; i++) 
+    if (C.Name[0] == 0) return;     // 빈 카드는 삽입을 거부
+    
+    for (i = 0; i < Num; i++)       // 유효한 카드면 정렬된 위치에 삽입 => 손에 쥔 패나 담요에 깔린 패를 쉽게 찾기위해 정렬을 사용했음.
     {
-        if (C < Card[i]) break;
+        if (C < Card[i]) break;     // SCard 클래스에서 '<' 연산자를 정의했으므로 객체와 값의 비교 연산자가 가능한 것임.
     }
     memmove(&Card[i + 1], &Card[i], sizeof(SCard) * (Num - i));
     Card[i] = C;
     Num++;
+
+
+    /*
+             -- 7오와 9피 사이에 7피 삽입예정 --
+
+                         (7피)
+        2피  3광  6십  7오  9피  J오  D피
+
+        2피  3광  6십  7오  (7피)  9피  J오  D피
+
+        '<' 연산자로 카드끼리 대소를 비교하고 삽입할 위치보다 더 뒤쪽의 카드(9피, J오, D피)는 한 칸씩 오른쪽으로 이동시켜서 빈칸을 만듬.
+        오른쪽으로 땡겨지면서 빈자리에 새 카드를 삽입시키면서 Num을 ++해줌.
+    
+    */
+
 }
 
+// 지정한 첨자의 카드제거하고 해당 카드를 리턴하는 함수 => 손에서 카드를 내거나 데크에서 카드를 뒤집을때 이 함수 호출
 SCard CCardSet::RemoveCard(int idx) 
 {
     assert(idx < Num);
-    SCard C = Card[idx];
-    memmove(&Card[idx], &Card[idx + 1], sizeof(SCard) * (Num - idx - 1));
-    Num--;
+    SCard C = Card[idx];           // 
+    memmove(&Card[idx], &Card[idx + 1], sizeof(SCard) * (Num - idx - 1));  // 정렬 상태를 유지하기위해 제거된 카드 뒤쪽은 한칸씩 앞으로 이동
+    Num--;            // 한칸씩 앞으로 이동하면서 Num을 --해줌.
     return C;
 }
 
+// C와 일치하는 카드를 조사하는 함수 => 여러 장의 카드가 일치할 수 있으므로 배열에 카드 목록을 작성하고 개수를 리턴
 int CCardSet::FindSameCard(SCard C, int* pSame) 
 {
+    // 같은 카드는 최대 4장까지 가능하므로 배열은 끝 표시인 -1을 포함하여 최소 5의 크기를 가져야함.
     int i, num;
     int* p = pSame;
 
@@ -156,8 +189,22 @@ int CCardSet::FindSameCard(SCard C, int* pSame)
     }
     *p = -1;
     return num;
+
+    /*  -- FindSameCard 함수의 예시 --
+     
+     사용자가 손에서 3광을 냈을때 담요에 가져갈 카드가 2가지이상인지 따져보는 것
+
+     (담요) 1오 1피 '3오' '3피' 5십 6피 9십 D광
+
+
+     => 3광을 냈는데 담요에는 3오, 3피 두개 중에 하나를 가져갈 수 있다.
+     이때 배열에 2, 3, -1을 채우고 같은 카드 개수인 2를 리턴한다.
+
+     main은 이 함수의 리턴값에따라 먹을게 있는지, 설사를 했는지 등을 판단할 수 있다.
+    */
 }
 
+// 부분 문자열 검색을 통해 숫자나 종류가 일치하는 최초의 카드를 검색하여 첨자를 리턴하는 함수(발견안되면 -1반환)
 int CCardSet::FindFirstCard(const char* pName) 
 {
     int i;
@@ -170,6 +217,15 @@ int CCardSet::FindFirstCard(const char* pName)
         }
     }
     return -1;
+
+
+    // 피박 체크를위해 상대편이 피를 먹었는지 먹지 못했는지 알 수 있음.
+    /*
+    (예시)
+    FindFirstCard("피");   // 숫자에 상관없이 피가 있는지 조사
+    FindFirstCard("8");    // 종류에 상관없이 8이 있는지 조사
+    FindFirstCard("4십");  // 4십 카드가 있는지 조사
+    */
 }
 
 // 한꺼번에 들어온 카드가 몇장인지 조사하는 함수
@@ -193,12 +249,13 @@ int CCardSet::GetMaxSeries()
     return m;
 }
 
+
 //// 담요 중앙에 카드를 쌓아 놓는 덱
-class CDeck : public CCardSet  // 카드의 집합이므로 CCardSet에게 상속받음
+class CDeck : public CCardSet       // 카드의 집합이므로 CCardSet에게 상속받음
 {
 public:
     CDeck(int asx, int asy) : CCardSet(asx, asy) { ; }
-    void Shuffle()          // 카드를 무작위로 섞기(랜덤함수사용)
+    void Shuffle()                  // 카드를 무작위로 섞기(랜덤함수사용)
     {
         int i, n;
         for (i = 0; i < MaxCard; i++) 
@@ -232,7 +289,8 @@ public:
 
     // 플레이어의 패를 그리는 함수 => 손에 쥔 카드를 순서대로 화면에 나열.
     // 자기차례일때는 어떤 카드를 낼지 입력받기위해 패 아래쪽에 일련 번호를 출력
-    // 1오 2십 2오 5오 5피         // 원래 이렇게보이다가
+    
+    // 1오 2십 2오 5오 5피         // 원래 이 한줄만 보이다가
     // [1] [2] [3] [4] [5]         // 자기차례되면 번호가 나오게됨.(이때 숫자를 입력하면 그 카드를 내는것임)
     void Draw(bool MyTurn)  
     {
@@ -257,7 +315,8 @@ class CBlanket : public CPlayer
 {
 public:
     CBlanket(int asx, int asy) : CPlayer(asx, asy) { ; }
-    void Draw() {
+    void Draw()               
+    {
         CPlayer::Draw(false);
     }
 
@@ -316,14 +375,15 @@ public:
 void CPlayerPae::Draw() 
 {
     int i, kind;
-    int x[4] = { sx,sx,sx,sx }, py = sy + 3;
+    int x[4] = { sx,sx,sx,sx };
+    int py = sy + 3;             // 피는 여러 줄로 출력해서 개행 처리를 위해 py에 현재 행을 기억함.
 
     for (i = 0; i < Num; i++) 
     {
         kind = Card[i].GetKind();
         if (kind < 3) 
         {
-            gotoxy(x[kind], sy + kind);
+            gotoxy(x[kind], sy + kind);  // 종류별로 네 개의 x좌표를 유지하며 해당 종류의 카드가 나올때마다 CardGap만큼 오른쪽으로 이동
             x[kind] += CardGap;
         }
         else 
@@ -425,14 +485,14 @@ int CPlayerPae::CalcScore()
 
     NewScore = gscore[n[0]];
 
-    if (n[0] == 3 && FindFirstCard("B광") != -1) NewScore--;
+    if (n[0] == 3 && FindFirstCard("B광") != -1) NewScore--;   // 광 냈을때 점수
     if (n[1] >= 5) NewScore += (n[1] - 4);
     if (n[2] >= 5) NewScore += (n[2] - 4);
     if (n[3] >= 10) NewScore += (n[3] - 9);
-    if (FindFirstCard("8십") != -1 && FindFirstCard("5십") != -1 && FindFirstCard("2십") != -1) NewScore += 5;
-    if (FindFirstCard("1오") != -1 && FindFirstCard("2오") != -1 && FindFirstCard("3오") != -1) NewScore += 3;
-    if (FindFirstCard("4오") != -1 && FindFirstCard("5오") != -1 && FindFirstCard("7오") != -1) NewScore += 3;
-    if (FindFirstCard("9오") != -1 && FindFirstCard("J오") != -1 && FindFirstCard("6오") != -1) NewScore += 3;
+    if (FindFirstCard("8십") != -1 && FindFirstCard("5십") != -1 && FindFirstCard("2십") != -1) NewScore += 5;  // 고도리
+    if (FindFirstCard("1오") != -1 && FindFirstCard("2오") != -1 && FindFirstCard("3오") != -1) NewScore += 3;  // 홍단
+    if (FindFirstCard("4오") != -1 && FindFirstCard("5오") != -1 && FindFirstCard("7오") != -1) NewScore += 3;  // 초단
+    if (FindFirstCard("9오") != -1 && FindFirstCard("J오") != -1 && FindFirstCard("6오") != -1) NewScore += 3;  // 청단
 
     return NewScore;
 }
@@ -479,12 +539,16 @@ void main()
 
     randomize();
 
-    /*for (int k = 0; k < 1000; k++) {    // 자동 테스트. main함수 맨밑에 for문 닫는 중괄호( '}')있음.
+    /*for (int k = 0; k < 1000; k++) {    // 자동 테스트 루프문. main함수 맨밑에 for문 닫는 중괄호( '}')있음. 
+                                          // 난수생성을 루프로 돌려서 각 난수에대해 게임 실행이 잘 되는지 점검하는 용도임.
+                                          // 만약 이상이있으면 k값을 알아내서 어떤 경우에 이상이 생기는지 알 수 있게 했음.
+                                          
         srand(k);*/
 
 
-    Initialize();
-    DrawScreen();    // 각 객체를 화면에 그리고 시작
+    Initialize();    // 데크에 카드를 섞고 패를 골고루 나누어주어 게임판 생성
+
+    DrawScreen();    // 각 객체를 화면에 그려주고 게임이 시작됨.
 
 
     // 처음 카드중에 3장이 같으면 흔들껀지 말껀지 출력 (남군, 북군 각각 1번씩)
@@ -500,11 +564,14 @@ void main()
         if (ch == 1) NorthPae.bShake = true;
     }
 
+    // 카드 하나를 낼때 for문 루프가 한번 반복됨.
     for (SouthTurn = true; !Deck.IsEmpty(); SouthTurn = !SouthTurn)  // 남군의 턴, 덱이 0장일때까지, 남군의 턴이 남군의 턴이 아닐때(= 북군의 턴)
     {
         DrawScreen(); 
 
-        // 누구의 턴인지 구별
+        // 누구의 턴인지 구별 
+        // => 누구 차례인지에따라 플레이어의 패를 담요로옮기고, 먹을 카드를 패로 옮겨야함.
+        // => 근데 매번 차례를 점검하는게 번거로우니까 TurnPae, OtherPae에 대상 패를 미리 조사해놓음(TurnPae는 먹은 카드가 이동할 곳임)
         if (SouthTurn)     // 남군의 턴일때
         {
             Turn = &South;
@@ -522,7 +589,7 @@ void main()
         sprintf(Mes, "내고 싶은 화투를 선택하세요(1~%d,0:종료) ", Turn->GetNum());
         ch = InputInt(Mes, 0, Turn->GetNum());
 
-        if (ch == 0) 
+        if (ch == 0)   // 종료숫자인 0을 입력했을때
         {
             // 종료 조건문
             if (InputInt("정말 끝낼겁니까?(0:예,1:아니오)", 0, 1) == 0)  
@@ -557,7 +624,7 @@ void main()
             }
             else 
             {
-                // 일치하는 카드 목록을 arSame에 담고 담요의 DrawSelNum을 호출.
+                // 일치하는 카드 목록을 arSame에 담고 담요의 DrawSelNum을 호출
                 // 사용자의 키 입력을받아 UserSel에 담음.
                 Blanket.DrawSelNum(arSame);
                 sprintf(Mes, "어떤 카드를 선택하시겠습니까?(1~%d)", SameNum); 
@@ -566,14 +633,14 @@ void main()
             break;
 
 
-            // 두개가 일치하는 경우 ( 2가지 경우의 수)
+            // 두개가 일치하는 경우 (2가지 경우의 수)
             /*
              (담요)      1광 (4십 4피) 9십 B오                  1광 (4피 4피) 9십 B오
                    
-                          질문을 하는 경우                       질문 필요없는 경우 => 둘 중에 뭘먹든 똑같기때문에 필요없음.
+                        1. 질문을 하는 경우                   2. 질문 필요없는 경우 => 둘 중에 뭘먹든 똑같기때문에 필요없음.
 
                                  
-                                              (플레이어카드) 4오
+                                           (플레이어카드) 4오
             */
 
 
@@ -604,7 +671,7 @@ void main()
         {
         case 0:                  // 일치하는 카드가 없는 경우 => 플레이어가 낸 카드는 즉시 담요에 삽입되지만,
                                                              // 데크에서 뒤집은 카드는 바로 삽입하지 말고 플레이어의 카드가 처리될때 까지 대기함.
-            DeckSel = -1;   // 먹을게 없음...
+            DeckSel = -1;        // 먹을게 없음...
             break;
 
         case 1:                  // 하나만 일치하는 경우 
@@ -649,7 +716,7 @@ void main()
             }
             break;
 
-        case 3:               // 세 개가 일치하는 경우 => 모든 카드를 다 가져옴.
+        case 3:                 // 세 개가 일치하는 경우 => 모든 카드를 다 가져옴.
             DeckSel = arSame[1];   // DeckSel에 가운데 카드를 선택
             DeckTriple = true;     // DeckTriple flag를 true 대입해줌.
             break;
@@ -738,16 +805,16 @@ void main()
 
         // 점수를 계산하고 고, 스톱 여부를 질문한다.
         NewScore = TurnPae->CalcScore();
-        if (Deck.IsNotLast() && NewScore > TurnPae->OldScore) 
+        if (Deck.IsNotLast() && NewScore > TurnPae->OldScore)   // 새 점수가 OldScore보다 커졌다면 고/스톱 질문
         {
             DrawScreen();
-            if (InputInt("추가 점수를 획득했습니다.(0:스톱, 1:계속)", 0, 1) == 1) 
+            if (InputInt("추가 점수를 획득했습니다.(0:스톱, 1:계속)", 0, 1) == 1)  // 계속할꺼면(1눌렀을때) 고 횟수를 증가시키고 루프 선두로 돌아감.
             {
                 TurnPae->OldScore = NewScore;
                 TurnPae->IncreaseGo();
                 LastGo = Turn;
             }
-            else 
+            else        // 스톱(0눌렀을때) 게임을 끝냄, 마지막판에는 어차피 끝나는 중이므로 무조건 스톱임.
             {
                 break;
             }
@@ -822,7 +889,9 @@ void main()
     {
         strcat(Mes, "진쪽이 독박입니다. ");
     }
+
     OutPrompt(Mes);
+
 
     /*
     // 테스트 할때 사용하는 코드
@@ -839,10 +908,10 @@ void main()
     }
     SouthPae.Reset();
     NorthPae.Reset();
+
     // }
 
     */
-
 }
 
 
@@ -856,13 +925,15 @@ void Initialize()
 {
     int i;
 
-    for (;;) {
+    for (;;) 
+    {
         Deck.Reset();
         South.Reset();
         North.Reset();
         Blanket.Reset();
         Deck.Shuffle();
-        for (i = 0; i < 10; i++) {
+        for (i = 0; i < 10; i++) 
+        {
             South.InsertCard(Deck.Pop());
             North.InsertCard(Deck.Pop());
             if (i < 8) Blanket.InsertCard(Deck.Pop());
@@ -905,20 +976,26 @@ void OutPrompt(const char* Mes, int Wait/*=0*/)
 /// </summary>
 int InputInt(const char* Mes, int start, int end)
 {
+    // return 1;      // 테스트용일때 사용자의 입력이 필요할때는 무조건 1번을 선택하도록 고정함.
+                      // 그럼 손에 갖고있는 패나 담요의 카드를 선택할때는 1번에 위치한 카드를 갖고옴
+                      // 고나 스톱을 요구할때는 1번이 리턴되서 무조건 고가 됨.
     int ch;
 
     OutPrompt(Mes);
-    for (;;) {
+    for (;;) 
+    {
         ch = tolower(_getch());
-        if (ch == 0xE0 || ch == 0) {
+        if (ch == 0xE0 || ch == 0) 
+        {
             ch = _getch();
             continue;
         }
         if (!(isdigit(ch) || ch == 'a')) continue;
         if (ch == 'a') ch = 10; else ch = ch - '0';
-        if (ch >= start && ch <= end) {
+        if (ch >= start && ch <= end) 
+        {
             return ch;
         }
-        OutPrompt("무효한 번호입니다. 지정한 범위에 맞게 다시 입력해 주세요.");
+        OutPrompt("무효한 번호입니다. 지정한 범위에 맞게 다시 입력해 주세요.");    // 정해진 숫자말고 딴거 입력하면 오류 출력
     }
 }
