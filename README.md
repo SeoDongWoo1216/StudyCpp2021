@@ -1,7 +1,6 @@
 # StudyCpp2021
-C++ 학습 리포지토리입니다. <br><br>
+C++ 학습 리포지토리 <br><br>
 교재 : C++ 기초 프로그래밍 트레이닝 <br><br>
-
 -------------------
 
 - [1. C언어의 확장](https://andjjip.tistory.com/246?category=949011)
