@@ -17,7 +17,7 @@ C++ 학습 리포지토리 <br><br>
 - [9. 예외 처리](https://andjjip.tistory.com/293?category=949011)
 - [10. 타입 정보](https://andjjip.tistory.com/295?category=949011)
 - [12. 표준 라이브러리](https://andjjip.tistory.com/296?category=949011)
-- [13. C++ 실습 : 고스톱 프로그](https://github.com/SeoDongWoo1216/StudyCpp2021/tree/main/Chapter13_%EC%8B%A4%EC%8A%B5)
+- [13. C++ 실습 : 고스톱 프로그램](https://github.com/SeoDongWoo1216/StudyCpp2021/tree/main/Chapter13_%EC%8B%A4%EC%8A%B5)
 
 -------------------
 
