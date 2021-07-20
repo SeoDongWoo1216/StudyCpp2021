@@ -29,9 +29,12 @@
 -----
 
 ### 결과 화면
-![고스톱1](https://github.com/SeoDongWoo1216/StudyCpp2021/blob/main/Chapter13_%EC%8B%A4%EC%8A%B5/image/%EA%B3%A0%EC%8A%A4%ED%86%B11.PNG)
-![고스톱2](https://github.com/SeoDongWoo1216/StudyCpp2021/blob/main/Chapter13_%EC%8B%A4%EC%8A%B5/image/%EA%B3%A0%EC%8A%A4%ED%86%B12.PNG)
-![고스톱3](https://github.com/SeoDongWoo1216/StudyCpp2021/blob/main/Chapter13_%EC%8B%A4%EC%8A%B5/image/%EA%B3%A0%EC%8A%A4%ED%86%B13.PNG)
-![고스톱4](https://github.com/SeoDongWoo1216/StudyCpp2021/blob/main/Chapter13_%EC%8B%A4%EC%8A%B5/image/%EA%B3%A0%EC%8A%A4%ED%86%B14.PNG)
-![고스톱5](https://github.com/SeoDongWoo1216/StudyCpp2021/blob/main/Chapter13_%EC%8B%A4%EC%8A%B5/image/%EA%B3%A0%EC%8A%A4%ED%86%B15.PNG)
-![고스톱6](https://github.com/SeoDongWoo1216/StudyCpp2021/blob/main/Chapter13_%EC%8B%A4%EC%8A%B5/image/%EA%B3%A0%EC%8A%A4%ED%86%B16.PNG)
+<p align = "center" >
+    <img src = https://github.com/SeoDongWoo1216/StudyCpp2021/blob/main/Chapter13_%EC%8B%A4%EC%8A%B5/image/%EA%B3%A0%EC%8A%A4%ED%86%B11.PNG>
+    <img src = https://github.com/SeoDongWoo1216/StudyCpp2021/blob/main/Chapter13_%EC%8B%A4%EC%8A%B5/image/%EA%B3%A0%EC%8A%A4%ED%86%B12.PNG>
+    <img src = https://github.com/SeoDongWoo1216/StudyCpp2021/blob/main/Chapter13_%EC%8B%A4%EC%8A%B5/image/%EA%B3%A0%EC%8A%A4%ED%86%B13.PNG>
+    <img src = https://github.com/SeoDongWoo1216/StudyCpp2021/blob/main/Chapter13_%EC%8B%A4%EC%8A%B5/image/%EA%B3%A0%EC%8A%A4%ED%86%B14.PNG>
+    <img src = https://github.com/SeoDongWoo1216/StudyCpp2021/blob/main/Chapter13_%EC%8B%A4%EC%8A%B5/image/%EA%B3%A0%EC%8A%A4%ED%86%B15.PNG>
+    <img src = https://github.com/SeoDongWoo1216/StudyCpp2021/blob/main/Chapter13_%EC%8B%A4%EC%8A%B5/image/%EA%B3%A0%EC%8A%A4%ED%86%B16.PNG>
+</p>
+------
